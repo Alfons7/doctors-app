@@ -1,0 +1,214 @@
+/*
+  ========================================
+  General styles and helper classes
+  ========================================
+*/
+:root {
+    --main-color: #0d6efd;
+    --dark-color: #0257d5;
+    --light-color: #0db1fd;
+}
+a {
+    text-decoration: none;
+}
+img:not(.img-fluid) {
+    display:block; 
+    border-radius: 15%;
+}
+.hidden {
+    display: none;
+}
+.u-center-content {
+    text-align: center;
+}
+.u-center-elt {
+    margin: 0 auto;
+}
+
+/*
+  ========================================
+  Layout styles
+  ========================================
+*/
+body { 
+    padding: 4px;
+}
+.navbar-brand {
+    font-family: 'Black Han Sans', sans-serif;
+}
+.user-picture {
+    margin-right: 4px;
+    height: 24px;
+}
+/* <main> wraps the content block in the layout template */
+main {
+    padding: 24px 8px 0 8px;
+}
+h1, 
+h2 {
+    color: var(--dark-color);
+}
+h2,
+h3,
+footer {
+    text-align: center;
+}
+/* used for flash messages */
+.alert {
+    text-align: center;
+}
+
+/*
+  ==========================================
+  Register, login, logout, update user data 
+  ==========================================
+*/
+form {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 700px;
+}
+.form-label {
+    margin-bottom: 2px;
+}
+.form-field {
+    margin-bottom: 8px;
+}
+.form-text,
+.errorlist {
+    margin-top: 2px;
+}
+/* errorlist is a class added by django
+   here we set values similar to bootstrap's ones */
+.errorlist {
+    margin-bottom: 1px;
+    list-style-type: none;
+    padding-left: 0;
+    width: 100%;
+    font-size: .875em;
+    color: #dc3545;
+}
+.errorlist.nonfield {
+    font-size: 1.1em;
+    text-align: center;
+}
+
+#main-user-picture {
+    height: 25vh;
+}
+section {
+    width: 90%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+#error-message {
+    margin-top: 0px;
+}
+
+
+/*
+  ==========================================
+  Index page with search functionality 
+  ==========================================
+*/
+div.search {
+    margin-top: 24px;
+    margin-left: 48px;
+}
+h1 {
+    margin-bottom: 16px;
+}
+input[type="search"] {
+    width: 90%;
+    max-width: 900px;
+    border-width: 2px;
+    border-color: var(--light-color);
+}
+#results_container {
+    margin-top: 24px;
+}
+
+.card {
+    width: 90%;
+    max-width: 540px;
+    border-color: var(--light-color);
+}
+.card-doctor-results {
+    cursor: pointer;
+}
+/* reduce card's max-width on small screens
+   because the card becomes vertical with the 
+   photo above the doctor's name */
+@media screen and (max-width: 575px) {
+    .card {
+        width: 90%;
+        max-width: 240px;
+    }
+}
+.card-title {
+    margin-bottom: 4px;
+}
+/* highlight the text that matched in the search results */
+.matched {
+    font-weight: bold;
+    text-decoration: underline;
+    color: var(--main-color);
+  }
+  
+
+/*
+  ===================================================
+  Booking page
+  ===================================================
+*/
+.booking {
+    border-color: rgba(0,0,0,.16);
+}
+.booking .card-header {
+    background-color: rgba(0,0,0,.08);
+    padding: 16px;
+    cursor: pointer;
+}
+.closed .card-body {
+    display: none;
+}
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+}
+.time-box {
+    margin: 8px;
+    padding: 8px 9px;
+    background-color: rgba(0,0,0,.12);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+
+
+
+
+/*
+  ===================================================
+  Appointments page
+  ===================================================
+*/
+
+.card-appointment-header {
+    color: white;
+    background-color: var(--light-color);
+    border-width: 1px;
+    border-color: var(--light-color);
+}
+.card-appointment-cancel {
+    color: var(--light-color);
+    border-color: var(--light-color);
+}
+.card-appointment-cancel:hover {
+    color: white;
+    background-color: var(--light-color);
+    border: none;
+}
+.card-body {
+    height: 100%;
+}

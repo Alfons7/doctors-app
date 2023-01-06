@@ -1,0 +1,21 @@
+{% extends "doctors/layout.html" %}
+{% load static %}
+{% block content %}
+
+<div class="search">
+    <h1>Book an appointment with a doctor</h1>
+
+    <input type="search" class="form-control form-control-lg"
+           id="search-box" placeholder="Doctor's name or specialty"
+           autofocus>
+
+    <div id="results_container"></div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+document.querySelector('#search-box').addEventListener('input', searchDoctors);
+</script>
+{% endblock %}

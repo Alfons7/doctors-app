@@ -1,0 +1,6 @@
+venv/
+db.sqlite3
+__pycache__ 
+p5-capstone-2022.mp4
+p5-capstone-instructions.pdf
+.env

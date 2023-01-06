@@ -1,0 +1,79 @@
+{% extends "doctors/layout.html" %}
+
+{% block content %}
+<h2>{{ action }}</h2>
+{{ form.non_field_errors }}
+<form action="{% if action == 'REGISTER' %}{% url 'doctors:register' %}{% else %}{% url 'doctors:user-update' user.id %}{% endif %}" 
+      method="post" novalidate>{% csrf_token %}
+    <!-- username -->
+    <div class="form-field">  
+        <label for="id_username" class="form-label">Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+    </div>
+    {% if action == 'REGISTER' %}
+        <!-- password -->
+        <div class="form-field">
+            <label for="id_password" class="form-label">Password</label>      
+            {{ form.password }}
+            {{ form.password.errors }}
+        </div>
+        <!-- password_confirm -->
+        <div class="form-field">
+            <label for="id_password_confirm" class="form-label">Password again</label>
+            {{ form.password_confirm }}
+            {{ form.password_confirm.errors }}
+        </div>
+    {% endif %}
+    <!-- first name -->
+    <div class="form-field">
+        <label for="id_first_name" class="form-label">First name</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+    </div>
+    <!-- last name -->
+    <div class="form-field">
+        <label for="id_last_name" class="form-label">Last name</label>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+    </div>
+    <!-- email -->
+    <div class="form-field">
+        <label for="id_email" class="form-label">Email</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+    </div>
+    <!-- is_doctor -->
+    <div class="form-field">
+        {{ form.is_doctor }}
+        <label for="id_is_doctor" class="form-check-label">I am a doctor</label>
+        {{ form.is_doctor.errors }}
+    </div>
+    <!-- specialty -->
+    <div id="specialty-field" class="form-field hidden">
+        <label for="id_specialty" class="form-label">Medical specialty</label>
+        {{ form.specialty }}
+        {{ form.specialty.errors }}
+    </div>
+    <!-- description -->
+    <div id="description-field"class="form-field hidden">
+        <label for="id_description" class="form-label">Description</label>
+        {{ form.description }}
+        {{ form.description.errors }}
+    </div>
+    <input class="btn btn-primary" type="submit" value="{{ action }}">
+</form>
+{% if action == 'REGISTER' %}
+    <footer>
+        You already have an account?
+        <a href="{% url 'doctors:login' %}"> Log in here</a>
+    </footer>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.querySelector('#id_is_doctor').addEventListener('change', showDoctorFields);
+        showDoctorFields();
+    </script>
+{% endblock %}

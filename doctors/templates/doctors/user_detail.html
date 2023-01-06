@@ -1,0 +1,106 @@
+{% extends "doctors/layout.html" %}
+
+{% block content %}
+
+<section>
+    <h2>{{ user.get_full_name }}</h2>
+
+    <!-- buttons to upload picture and update profile-->
+    <div class="u-center-content" style="margin-bottom: 16px;">
+        <!-- Button to trigger dialog box (bootstrap's modal) -->
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadPicture">
+            {% if user.picture %}UPDATE{% else %}UPLOAD{% endif %} MY PICTURE
+        </button>
+        &nbsp;
+        <button type="button" class="btn btn-outline-primary"
+        onclick="location.href='{% url 'doctors:user-update' user.id %}';">
+            &nbsp;UPDATE MY DATA&nbsp;
+        </button>
+    </div>
+
+    <!-- Dialog box (Bootsrap modal) to upload a picture -->
+    <div class="modal fade" id="uploadPicture" tabindex="-1">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadPictureLabel">My picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- enctype="multipart/form-data" needed to upload user picture -->
+                <form action="{% url 'doctors:upload' %}" method="post" 
+                      enctype="multipart/form-data" novalidate id="picture-form">{% csrf_token %}
+                <!-- picture -->
+                <div class="form-field">
+                    {{ form.picture }}
+                    <div class="form-text">File size cannot exceed 1 MB.</div>
+                    <div id="error-message" class="invalid-feedback"></div>
+                </div>
+                </form>
+            </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="send_picture" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- user picture -->
+    {% if user.picture %}
+        <img src="{{ user.picture.url }}" alt="user picture" id="main-user-picture" 
+             class="user-picture mx-auto" style="margin-bottom: 8px;">
+    {% endif %}
+
+    <!-- user details -->
+    <h6 class="card-title" style="margin-bottom: 4px;">
+        First name
+    </h6>
+    <p class="card-text">
+        {{ user.first_name }}
+    </p>
+    <h6 class="card-title" style="margin-bottom: 4px;">
+        Last name
+    </h6>
+    <p class="card-text">
+        {{ user.last_name }}
+    </p>
+    <h6 class="card-title" style="margin-bottom: 4px;">
+        Email
+    </h6>
+    <p class="card-text">
+        {{ user.email }}
+    </p>
+    {% if user.is_doctor %}
+        <h6 class="card-title" style="margin-bottom: 4px;">
+            Specialty
+        </h6>
+        <p class="card-text">
+            {{ user.specialty }}
+        </p>
+        <h6 class="card-title" style="margin-bottom: 4px;">
+            Description
+        </h6>
+        <p class="card-text">
+            {% if user.description %}
+                {{ user.description }}
+            {% else %}
+                No description yet
+            {% endif %}
+        </p>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.querySelector('#send_picture').addEventListener('click', submitPicture);
+        document.querySelector('#id_picture').addEventListener('click', () => {
+            // clear any previous error message when user choses a new file
+            errorElt = document.querySelector("#error-message");
+            errorElt.textContent = '';
+            errorElt.style.display = 'none';
+        });
+    </script>
+{% endblock %}

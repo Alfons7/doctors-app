@@ -1,0 +1,26 @@
+{% extends "doctors/layout.html" %}
+
+{% block content %}
+<h2>Log in</h2>
+{{ form.non_field_errors }}
+<form action="{% url 'doctors:login' %}" method="post" novalidate>{% csrf_token %}
+    <!-- username -->
+    <div class="form-field">  
+        <label for="id_username" class="form-label">Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+    </div>
+    <!-- password -->
+    <div class="form-field">
+        <label for="id_password" class="form-label">Password</label>      
+        {{ form.password }}
+        {{ form.password.errors }}
+    </div>
+    <input class="btn btn-primary" type="submit" value="Login">
+    <input type="hidden" name="next" value="{{ next }}">
+</form>
+<footer>
+    You don't have an account?
+    <a href="{% url 'doctors:register' %}"> Register here</a>
+</footer>
+{% endblock %}

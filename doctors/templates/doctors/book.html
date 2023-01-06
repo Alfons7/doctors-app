@@ -1,0 +1,61 @@
+{% extends "doctors/layout.html" %}
+
+{% block content %}
+
+<h2>Book an appointment</h2>
+<h4 class="u-center-content mb-0">Doctor {{ doctor.get_full_name }}</h4>
+<p class="u-center-content mb-1">{{ doctor.specialty }}</p>
+<img src="{{ doctor.picture.url }}" height="150px" 
+        class="mb-4 mx-auto">
+<p class="u-center-content mb-2">Choose a date</p>
+
+{% for date in dates %} 
+<div class="card mb-3 mx-auto booking closed">
+    <div class="card-header d-flex justify-content-between"
+            onclick="getAvailabilities(event, '{{ doctor.id }}', '{{ date|date:'Ymd' }}');">
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div class="px-2 dateLongFormat"> {{ date|date:"l d F Y" }}</div>
+        <div>
+        <i class="bi bi-chevron-down"></i>
+        <i class="bi bi-chevron-up hidden"></i>
+        &nbsp;
+        </div>
+    </div>
+    <div class="card-body pt-2">
+        <p class="u-center-content mb-1">Choose a time slot</p>
+        <div class="time-slots"></div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Dialog box (Bootsrap modal) to confirm booking an appointment -->
+<div class="modal fade" id="ConfirmBookingModal" tabindex="-1">
+    <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AppointmentCancelModalLabel">Confirm appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Do you want to confirm your appointment with Doctor {{ doctor.get_full_name }}<br>
+                on <span id="dateLongFormat"></span> at <span id="time"></span>?
+                <form method="post" novalidate id="appointment-book-form">{% csrf_token %}
+                    <input type="hidden" name="doctor_id" value="{{ doctor.id }}" id="doctorId">
+                    <input type="hidden" name="date" id="dateId">
+                    <input type="hidden" name="time" id="timeId">
+                </form>
+            </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    No, come back
+                </button>
+                <button id="confirm_booking" type="button" class="btn btn-primary"
+                        onclick="confirmBooking();">
+                    Yes, book it
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

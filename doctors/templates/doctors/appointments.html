@@ -1,0 +1,87 @@
+{% extends "doctors/layout.html" %}
+
+{% block content %}
+
+    <h2 class="mb-4">Upcoming appointments</h2>
+
+    {% for appointment in appointments %}
+    <div class="card card-appointment mb-3 mx-auto">
+        <div class="card-header card-appointment-header d-flex justify-content-between">
+            <div>
+                <i class="bi bi-calendar" style="vertical-align: 10%;"></i>
+                {{ appointment.date|date:"l d F Y"}}
+            </div>
+            <div>
+                <i class="bi bi-clock" style="vertical-align: 10%;"></i>
+                {{ appointment.time|time:"H:i"}}
+            </div>
+          </div>
+        <div class="row g-0">
+            <div class="col-sm-3">
+                <!-- second condition covers case when a doctor took 
+                     an appointment with another doctor -->
+                {% if not user.is_doctor or user == appointment.patient %}
+                <img src="{{ appointment.doctor.picture.url }}" class="img-fluid rounded-start"
+                     style="border-top-left-radius: 0!important;">
+                {% else %}
+                <img src="{{ appointment.patient.picture.url }}" class="img-fluid rounded-start"
+                     style="border-top-left-radius: 0!important;">
+                {% endif %}
+            </div>
+            <div class="col-sm-9">
+                <div class="card-body d-flex flex-column">
+                    {% if not user.is_doctor or user == appointment.patient %}
+                    <h6 class="card-title">Doctor {{ appointment.doctor.get_full_name }}</h6>
+                    <p class="card-text">{{ appointment.doctor.specialty }}</p>
+                    {% else %}
+                    <h6 class="card-title">
+                        {% if appointment.patient.is_doctor %}Doctor {% endif %}
+                        {{ appointment.patient.get_full_name }}
+                    </h6>
+                    {% endif %}
+                    <button data-bs-toggle="modal" data-bs-target="#AppointmentCancelModal"
+                            type="button" style="margin-left: auto; margin-top: auto;"
+                            class="btn btn-outline-primary btn-sm card-appointment-cancel"
+                            data-appointment-id="{{ appointment.id }}" 
+                            data-person="{% if user.is_doctor %}{{ appointment.patient.get_full_name }}{% else %}Doctor {{ appointment.doctor.get_full_name }}{% endif%}"
+                            data-date="{{ appointment.date|date:"l d F Y"}}" 
+                            data-time="{{ appointment.time|time:"H:i"}}"
+                            onclick="initializeConfirmCancellationModal(event);">
+                        CANCEL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <div class="u-center-content">No appointment.</div>
+    {% endfor %}
+
+    <!-- Dialog box (Bootsrap modal) to confirm a cancellation -->
+    <div class="modal fade" id="AppointmentCancelModal" tabindex="-1">
+        <div class="modal-dialog" style="max-width: 600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AppointmentCancelModalLabel">Confirm cancelation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Do you want to cancel your appointment with <span id="person"></span><br>
+                    on <span id="date"></span> at <span id="time"></span>?
+                    <form method="post" novalidate id="appointment-cancel-form">{% csrf_token %}
+                        <input type="hidden" name="appointment_id" id="appointmentId">
+                    </form>
+                </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        No, come back
+                    </button>
+                    <button id="confirm_cancellation" type="button" class="btn btn-primary"
+                            onclick="confirmCancellation();">
+                        Yes, cancel it
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- bootstrap 5.0 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+                
+        <!-- google font used for navbar-brand -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+        
+        <!-- favicon created using  https://favicon.io/favicon-generator/ -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'site.webmanifest' %}"> 
+       
+        <!-- doctors/main.js contains the main functions used as event handlers -->
+        <script src="{% static 'doctors/main.js' %}"></script>
+
+        <link href="{% static 'doctors/styles.css' %}" rel="stylesheet">
+
+        <title>{% block title %}Doctors{% endblock %}</title>
+    </head>
+    <body>
+        <!-- responsive navigation bar -->
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button class="navbar-toggler mb-2 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                  <a class="navbar-brand me-4" href="{% url 'doctors:index' %}">Doctors</a>
+                  <ul class="navbar-nav mb-lg-0 me-auto mb-2">
+                    <li class="nav-item me-2">
+                        {% url 'doctors:index' as link_path %}
+                        <a class="nav-link{% if request.path == link_path %} active{% endif %}" href="{{ link_path }}">
+                            Find a doctor
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            {% url 'doctors:appointments' as link_path %}
+                            <a class="nav-link{% if request.path == link_path %} active{% endif %}" href="{{ link_path }}">
+                                My appointments
+                            </a>
+                        </li>
+                    {% endif %}
+                  </ul>
+                  {% if user.is_authenticated %}
+                  <ul class="navbar-nav mb-lg-0 mb-2">
+                    <li class="nav-item me-2">
+                      <a class="nav-link d-flex align-items-center" href="{% url 'doctors:user-detail' user.id %}">
+                        {% if user.picture %}
+                            <img src="{{ user.picture.url }}" alt="user picture" class="user-picture">
+                        {% endif %}
+                        <div>{{ user.username }}</div>
+                      </a>
+                    </li>
+                    <li class="nav-item me-2">
+                      <a class="nav-link" href="{% url 'doctors:logout' %}">Log out</a>
+                    </li>
+                  </ul>
+                  {% else %}
+                  <ul class="navbar-nav mb-lg-0 mb-2">
+                    <li class="nav-item me-2">
+                      {% url 'doctors:login' as link_path %}
+                      <a class="nav-link{% if request.path == link_path %} active{% endif %}" href="{{ link_path }}">Log in</a>
+                    </li>
+                    <li class="nav-item me-2">
+                        {% url 'doctors:register' as link_path %}
+                        <a class="nav-link{% if request.path == link_path %} active{% endif %}" href="{{ link_path }}">Register</a>
+                    </li>
+                  </ul>
+                  {% endif %}
+                </div>
+              </div>
+        </nav>
+
+        <!-- flash messages -->
+        {% for message in messages %}
+            <div class="alert alert-{{ message.extra_tags }}" role="alert">
+                {{ message.message }}
+            </div>
+        {% endfor %}
+
+        <main>
+            {% block content %}
+            {% endblock %}
+            {% block script %}
+            {% endblock %}
+        </main>
+    <body>
+</html>
+
