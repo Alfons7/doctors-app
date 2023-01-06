@@ -2,7 +2,7 @@
 
 CS50's web course capstone project, developed using Python/Django, JavaScript and Bootstrap.
 
-![Book appointments](./doctors/static/img-border.png)
+![Screenshot](./doctors/static/screenshot.jpg)
 
 The application provides functionality to:
 1. Search for doctors, by name or specialty, asynchronously. The list of suggested doctors is updated as the patient types in the search box.
